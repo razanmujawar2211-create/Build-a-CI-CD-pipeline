@@ -14,8 +14,9 @@ pipeline {
 
         stage('SonarQube Scan') {
             steps {
-               withSonarQubeEnv('SonarQube') {
-            sh 'sonar-scanner -Dsonar.projectKey=ci-cd-demo -Dsonar.sources=.'
+                withSonarQubeEnv('SonarQube') {
+                    sh 'sonar-scanner -Dsonar.projectKey=ci-cd-demo -Dsonar.sources=.'
+                }
             }
         }
 
@@ -38,3 +39,4 @@ pipeline {
         }
     }
 }
+
