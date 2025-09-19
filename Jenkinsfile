@@ -14,7 +14,8 @@ pipeline {
 
         stage('SonarQube Scan') {
             steps {
-                echo "SonarQube scan would run here (configure SonarQube later)"
+               withSonarQubeEnv('SonarQube') {
+            sh 'sonar-scanner -Dsonar.projectKey=ci-cd-demo -Dsonar.sources=.'
             }
         }
 
