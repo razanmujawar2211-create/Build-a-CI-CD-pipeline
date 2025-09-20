@@ -8,12 +8,15 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('My SonarQube Server') {
-                    sh 'mvn clean verify sonar:sonar'
-                }
-            }
+stage('SonarQube Scan') {
+    steps {
+        withSonarQubeEnv('SonarQube') {
+            sh """
+                ${tool 'SonarQubeScanner'}/bin/sonar-scanner \
+                -Dsonar.projectKey=ci-cd-demo \
+                -Dsonar.sources=. \
+                -Dsonar.host.url=http://localhost:9000
+            """
         }
     }
 }
@@ -37,3 +40,5 @@ pipeline {
         }
     }
 }
+
+
