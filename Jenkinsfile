@@ -14,17 +14,13 @@ pipeline {
 
         stage('SonarQube Scan') {
             steps {
-                withSonarQubeEnv('SonarQube') {
-                    script {
-                        def scannerHome = tool 'SonarQubeScanner'
-                        sh """
-                            ${scannerHome}/bin/sonar-scanner \
-                            -Dsonar.projectKey=ci-cd-demo \
-                            -Dsonar.sources=. \
-                            -Dsonar.host.url=http://localhost:9000
-                        """
-                    }
-                }
+                sh """
+                    sonar-scanner \
+                    -Dsonar.projectKey=ci-cd-demo \
+                    -Dsonar.sources=. \
+                    -Dsonar.host.url=http://localhost:9000 \
+                    -Dsonar.login=squ_ea99a774fc03950b3cfcb9ab84484b823fbb8a34
+                """
             }
         }
 
@@ -47,5 +43,7 @@ pipeline {
         }
     }
 }
+
+
 
 
