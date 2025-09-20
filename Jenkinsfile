@@ -1,29 +1,22 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKER_IMAGE = "razan2211/ci-cd-demo:latest"
-    }
-
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/razanmujawar2211/Build-a-CI-CD-pipeline.git'
+                git 'https://github.com/razanmujawar2211-create/Build-a-CI-CD-pipeline.git'
             }
         }
 
-        stage('SonarQube Scan') {
+        stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('SonarQube') {
-                    sh """
-                        sonar-scanner \
-                        -Dsonar.projectKey=ci-cd-demo \
-                        -Dsonar.sources=. \
-                        -Dsonar.host.url=http://localhost:9000
-                    """
+                withSonarQubeEnv('My SonarQube Server') {
+                    sh 'mvn clean verify sonar:sonar'
                 }
             }
         }
+    }
+}
 
         stage('Build Docker Image') {
             steps {
