@@ -1,5 +1,0 @@
-sonar.projectKey=flask-sample
-sonar.projectName=Flask Sample
-sonar.projectVersion=1.0
-sonar.sources=.
-sonar.python.version=3.11
