@@ -1,13 +1,8 @@
 pipeline {
     agent any
 
-    tools {
-        // Ensures Python and Docker are available
-        python "Python3"
-    }
-
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
+        SONARQUBE_AUTH_TOKEN = credentials('sonarqube-token')
         IMAGE_NAME = "razanmujawar2211-create/flask-sample"
     }
 
@@ -27,7 +22,13 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sonarqube') {
-                    sh 'sonar-scanner -Dsonar.projectKey=flask-sample -Dsonar.sources=.'
+                    sh """
+                        sonar-scanner \
+                          -Dsonar.projectKey=flask-sample \
+                          -Dsonar.sources=. \
+                          -Dsonar.host.url=http://localhost:9000 \
+                          -Dsonar.login=$SONARQUBE_AUTH_TOKEN
+                    """
                 }
             }
         }
@@ -38,17 +39,9 @@ pipeline {
             }
         }
 
-        stage('Push Docker Image') {
-            steps {
-                withDockerRegistry([ credentialsId: 'dockerhub-credentials', url: '' ]) {
-                    sh "docker push $IMAGE_NAME:${BUILD_NUMBER}"
-                }
-            }
-        }
-
         stage('Deploy to Kubernetes') {
             steps {
-                sh "kubectl apply -f k8s/"
+                sh 'kubectl apply -f k8s/'
             }
         }
     }
